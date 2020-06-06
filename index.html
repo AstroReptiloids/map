@@ -22,6 +22,12 @@
             width: 100%;
             height: 100%;
         }
+        .leaflet-container {
+            background-color: #9acc33;
+        }
+        .leaflet-bottom.leaflet-right {
+            display: none;
+        }
     </style>
 
 
@@ -32,51 +38,134 @@
 
 <script>
 
-  var map = L.map('map', {
+  const map = L.map('map', {
     crs: L.CRS.Simple,
     minZoom: -3
   });
 
-  var yx = L.latLng;
+  const yx = L.latLng;
 
-  var xy = function(x, y) {
+  const xy = function (x, y) {
     if (L.Util.isArray(x)) {    // When doing xy([x, y]);
       return yx(x[1], x[0]);
     }
     return yx(y, x);  // When doing xy(x, y);
   };
 
-  var bounds = [xy(0, 0), xy(1520, 960)];
-  var image = L.imageOverlay('assets/map1.png', bounds).addTo(map);
+  const bounds = [xy(0, 0), xy(1520, 960)];
+  const image = L.imageOverlay('assets/map1.png', bounds).addTo(map);
 
-  //
+  const categoriesMap = {
+    '1': '291e3130-014d-4d43-8362-a463bc582f1a',
+    '2': '1d273453-684f-4b57-8a79-d35b3a46f492',
+    '3': '84642211-fb73-4912-b416-61e9678ecb53',
+    '4': '4c060766-964e-495d-b915-c609c35081ff',
+    '5': '102e778d-ab19-47fc-87b5-763c7488e06e',
+    '6': '9138a0e0-101c-4ea1-8771-6a02834971f9',
+    '7': '65a69740-ddab-4d26-b1dd-81c28fd3d877',
+    '8': '51266093-8fb3-4c46-9f40-bfcaaab602a5',
+    '9': '272d8f67-42c8-4a3e-913b-56ed74afdc6f',
+    '10': '19b32c93-499a-4cfd-a859-3facd3ffab27'
+  }
 
-  var sol = xy(300.0, 655.0);
+  function onPopupClick(x) {
+    window.location = 'http://astroreptiloids.github.io/map?x=' + categoriesMap[x.toString()];
+  }
+
+  const items = [
+    {
+      x: 300.0,
+      y: 960 - 305,
+      html: '<p onclick="onPopupClick(1)" class="custom-popup">Бизнес ангелы</p>'
+    },
+    {
+      x: 365.0,
+      y: 960 - 775.0,
+      html: '<p onclick="onPopupClick(2)" class="custom-popup">Инновационный центр</p>'
+    },
+    {
+      x: 880.0,
+      y: 960 - 390.0,
+      html: '<p onclick="onPopupClick(3)" class="custom-popup">Консультации с экспертами</p>'
+    },
+    {
+      x: 611.0,
+      y: 960 - 354.0,
+      html: '<p onclick="onPopupClick(4)" class="custom-popup">Инвесторы</p>'
+    },
+    {
+      x: 800.0,
+      y: 960 - 760.0,
+      html: '<p onclick="onPopupClick(5)" class="custom-popup">Кладбище стартапов</p>'
+    },
+    {
+      x: 1230.0,
+      y: 960 - 578.0,
+      html: '<p onclick="onPopupClick(6)" class="custom-popup">Партнеры</p>'
+    },
+    {
+      x: 160.0,
+      y: 960 - 510.0,
+      html: '<p onclick="onPopupClick(7)" class="custom-popup">Доклады</p>'
+    },
+    {
+      x: 1264.0,
+      y: 960 - 270.0,
+      html: '<p onclick="onPopupClick(8)" class="custom-popup">Стартапы</p>'
+    },
+    {
+      x: 1045.0,
+      y: 960 - 138.0,
+      html: '<p onclick="onPopupClick(9)" class="custom-popup">Организаторы</p>'
+    },
+    {
+      x: 450.0,
+      y: 960 - 130.0,
+      html: '<p onclick="onPopupClick(10)" class="custom-popup">Производство</p>'
+    }
+  ]
+
+  items.forEach(item => {
+    const popupLocation = new L.LatLng(item.y, item.x);
+    const popupContent = item.html
+    const popup = new L.Popup({
+      closeOnClick: false,
+      autoClose: false,
+      closeButton: false
+    });
+
+    popup.setLatLng(popupLocation);
+    popup.setContent(popupContent);
+
+    map.addLayer(popup)
+  })
+
+  // const sol = xy(300.0, 655.0);
   // var mizar    = xy( 41.6, 130.1);
   // var kruegerZ = xy( 13.4,  56.5);
   // var deneb    = xy(218.7,   8.3);
 
-  var m1 = L.marker(sol).on('click', function(e) {
-    // window.location = 'http://astroreptiloids.github.io/map?x=1';
-  }).addTo(map).bindPopup('Бизнес ангелы');
-  m1.openPopup();
-
-  var popupLocation1 = new L.LatLng(960 - 775.0, 365.0);
-
-  var popupContent1 = '<p>Инновационный центр</p>'
-  var popup1 = new L.Popup();
-  // popup1.on('click', function(e) {
-  //   window.location = 'http://astroreptiloids.github.io/map?x=1';
-  // })
-
-  popup1.setLatLng(popupLocation1);
-  popup1.setContent(popupContent1);
+  // const m1 = L.marker(sol).on('click', function(e) {
+  //   // window.location = 'http://astroreptiloids.github.io/map?x=1';
+  // }).addTo(map).bindPopup('Бизнес ангелы');
+  // m1.openPopup();
+  //
+  // const popupLocation1 = new L.LatLng(960 - 775.0, 365.0);
+  //
+  // const popupContent1 = '<p>Инновационный центр</p>'
+  // const popup1 = new L.Popup();
+  // // popup1.on('click', function(e) {
+  // //   window.location = 'http://astroreptiloids.github.io/map?x=1';
+  // // })
+  //
+  // popup1.setLatLng(popupLocation1);
+  // popup1.setContent(popupContent1);
 
   // L.DomEvent.addListener(content, 'click', function(event){
   //   window.location = 'http://astroreptiloids.github.io/map?x=1';
   // }, popupContent1);
 
-  map.addLayer(popup1)
+  // map.addLayer(popup1)
 
   //
 
